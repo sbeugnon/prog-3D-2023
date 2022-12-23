@@ -1,0 +1,8 @@
+Info,  T0: Load ../obj/car.obj
+Info,  T0: Found a matching importer for this file format: Wavefront Object Importer.
+Info,  T0: Import root directory is '../obj/'
+Info,  T0: Entering post processing pipeline
+Info,  T0: TriangulateProcess finished. All polygons have been triangulated.
+Info,  T0: CalcTangentsProcess finished. Tangents have been calculated
+Info,  T0: JoinVerticesProcess finished | Verts in: 77688 out: 28074 | ~63.8631
+Info,  T0: Leaving post processing pipeline

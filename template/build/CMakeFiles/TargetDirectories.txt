@@ -1,0 +1,3 @@
+/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build/CMakeFiles/rebuild_cache.dir
+/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build/CMakeFiles/edit_cache.dir
+/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build/CMakeFiles/tp.dir

@@ -1,0 +1,62 @@
+[
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/Camera.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Camera.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Camera.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/Context.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Context.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Context.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/Keyboard.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Keyboard.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Keyboard.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/Material.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Material.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Material.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/Mesh.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Mesh.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Mesh.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/Mouse.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Mouse.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Mouse.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/SceneLoader.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/SceneLoader.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/SceneLoader.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/Shader.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Shader.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Shader.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/Texture.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Texture.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Texture.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/Trackball.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Trackball.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/Trackball.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/main.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/main.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/main.cpp"
+},
+{
+  "directory": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/build",
+  "command": "/usr/bin/c++   -I/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/include  -g   -std=gnu++17 -o CMakeFiles/tp.dir/src/stb_image.cpp.o -c /mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/stb_image.cpp",
+  "file": "/mnt/e/ludojeu115/Desktop/prog-3D-2022/template/src/stb_image.cpp"
+}
+]
