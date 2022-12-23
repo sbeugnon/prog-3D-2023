@@ -22,6 +22,7 @@ out vec2 o_uv0;
 void main() {
   mat3 normalMatrix = mat3(transpose(inverse(model)));
   o_uv0 = uv0;
+  o_uv0.y=1- o_uv0.y;
   vec4 positionWorld = model * vec4(position, 1.0);
   o_positionWorld = positionWorld.xyz;
   o_normalWorld = normalMatrix * normal;

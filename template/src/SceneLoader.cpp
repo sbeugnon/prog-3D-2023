@@ -1,6 +1,7 @@
 #include "SceneLoader.h"
 #include "Context.h"
 #include "Material.h"
+#include "Texture.h"
 // ASSIMP includes
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
@@ -118,11 +119,37 @@ void loadDataWithAssimp(const std::string& path) {
 		// materials.push_back(new UnlitMaterial());
 		// materials[0]->init();
 		for (int i = 0; i < scene->mNumMaterials; ++i) {
+			std::string folder = std::filesystem::path(path).parent_path().c_str();
+			folder+='/';
 			aiMaterial* material = scene->mMaterials[i];
-			aiString name;
-			material->Get(AI_MATKEY_NAME, name);
-			std::cerr << "Material " << i << " : " << name.C_Str() << std::endl;
+			aiString temporaryString;
+			std::cerr<< scene->GetShortFilename(path.c_str())<<std::endl;
+			material->Get(AI_MATKEY_NAME, temporaryString);
+			std::cerr << "Material " << i << " : " << temporaryString.C_Str() << std::endl;
 			Material* glMaterial = createMaterial(material);
+			glMaterial->name=temporaryString.C_Str();
+
+			if(material->GetTextureCount(aiTextureType_DIFFUSE)>0){
+				material->GetTexture(aiTextureType_DIFFUSE,0,&temporaryString);
+				std::cerr<<"diffuse :"<<folder+ temporaryString.C_Str()<<std::endl;
+				glMaterial->m_texture = loadTexture2DFromFilePath(folder+ temporaryString.C_Str());
+			}
+
+
+
+			if(material->GetTextureCount(aiTextureType_NORMALS)>0){
+				material->GetTexture(aiTextureType_NORMALS,0,&temporaryString);
+				std::cerr<<"normal :"<<folder+ temporaryString.C_Str()<<std::endl;
+				glMaterial->m_normal = loadTexture2DFromFilePath(folder+ temporaryString.C_Str());
+			}
+			if(material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS)>0){
+				material->GetTexture(aiTextureType_DIFFUSE_ROUGHNESS,0,&temporaryString);
+				std::cerr<<"roughness :"<<folder+ temporaryString.C_Str()<<std::endl;
+				glMaterial->m_roughness = loadTexture2DFromFilePath(folder+ temporaryString.C_Str());
+			}
+
+			material->Get(AI_MATKEY_COLOR_SPECULAR, glMaterial->m_specular);
+			std::cerr<<"specular :"<< glMaterial->m_specular<<std::endl;
 			Context::materials.push_back(glMaterial);
 			glMaterial->init();
 		}
@@ -157,5 +184,32 @@ void loadDataWithAssimp(const std::string& path) {
 		}
 		std::cerr << Context::instances.size() << " instances loaded" << std::endl;
 		delete stream;
+		importer.FreeScene();
+	}
+
+void importFirstObjasSkybox(const std::string& path) {
+	//by Ludovic Lonlas
+	return;
+	// Select the kinds of messages you want to receive on this log stream
+	Assimp::Importer importer;
+	std::cerr << std::filesystem::current_path() / path << std::endl;
+	std::cerr << "importer" << std::endl;
+	const aiScene* scene = importer.ReadFile(path,
+		aiProcess_GenSmoothNormals       |
+		aiProcess_CalcTangentSpace
+		| aiProcess_Triangulate
+		| aiProcess_JoinIdenticalVertices);
+		std::cerr << "importer done" << std::endl;
+		if (nullptr == scene) {
+			std::cerr << "Failed to load scene: "  << path << std::endl;
+			exit (EXIT_FAILURE);
+		}
+		std::cerr << "Assimp has loaded scene: " << path << std::endl;
+		if (!scene->HasMeshes()) {
+			std::cerr << "no meshes in scene"<< std::endl;
+			exit(EXIT_FAILURE);
+		}
+
+		std::cerr << "Loading meshes" << std::endl;
 		importer.FreeScene();
 	}

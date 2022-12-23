@@ -10,11 +10,23 @@
 
 struct Material {
 	// Shader program
-	GLuint m_program;
-
+	GLuint m_program=0;
+	GLuint m_type = 0; //0 = default 1 = skybox 2=mirror
 	// Material parameters
 	glm::vec4 m_color;
-	GLint m_texture;
+	glm::vec4 ambiant;
+	GLfloat m_specular;
+	glm::vec4 emmisive;
+	glm::vec4 transparent;
+	glm::vec4 reflective;
+
+	GLuint m_texture=-1;
+	GLuint m_normal=-1;
+	GLuint m_roughness=-1;
+	std::string name;
+	std::string diffusePath;
+	std::string normalMapPath;
+
 
 	inline void check() {
 		if (m_program == 0) {

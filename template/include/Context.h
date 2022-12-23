@@ -23,7 +23,8 @@ struct Context {
   static Camera camera;
   static bool fullScreen;
   static bool refreshMatrices;
-
+  static Mesh* skybox;
+  static Material* skyboxMaterial; 
   static std::vector<Instance> instances;
   static std::vector<Mesh*> meshes;
   static std::vector<Material*> materials;
