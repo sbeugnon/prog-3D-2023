@@ -25,6 +25,7 @@
 #include "Mouse.h"
 #include "Keyboard.h"
 #include "SceneLoader.h"
+#include "Texture.h"
 
 
 
@@ -35,9 +36,66 @@
 
 static GLint window;
 
+
+void initSkybox()
+{
+	float skyboxVertices[] = {
+		// positions
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f
+	};
+	glGenVertexArrays(1, &Context::skyboxVAO);
+	glGenBuffers(1, &Context::skyboxVBO);
+	glBindVertexArray(Context::skyboxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, Context::skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glBindVertexArray(0);
+}
+
 void init() {
-	// Context::camera.initPos();
-	Context::camera.resize(SCREENWIDTH, SCREENHEIGHT);
+
+
 	glCullFace (GL_BACK);
 	glEnable (GL_CULL_FACE);
 	glDepthFunc (GL_LESS);
@@ -50,6 +108,23 @@ void init() {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return;
 	}
+
+	// Context::camera.initPos();
+	Context::camera.resize(SCREENWIDTH, SCREENHEIGHT);
+	Context::skyboxProgram = load_shaders("shaders/skybox/vertex.glsl", "shaders/skybox/fragment.glsl");
+
+	// load skybox texture
+	std::vector<std::string> faces
+	{
+		"data/skybox/right.jpg",
+		"data/skybox/left.jpg",
+		"data/skybox/top.jpg",
+		"data/skybox/bottom.jpg",
+		"data/skybox/front.jpg",
+		"data/skybox/back.jpg"
+	};
+	Context::skyboxTexture = loadCubemap(faces);
+	initSkybox();
 }
 
 void beforeLoop() {
@@ -81,6 +156,23 @@ void draw() {
 	// Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	//glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_FALSE);
+	// bind skybox
+	glUseProgram(Context::skyboxProgram);
+	glUniformMatrix4fv(glGetUniformLocation(Context::skyboxProgram, "projection"), 1, false, glm::value_ptr(Context::camera.projection));
+	glUniformMatrix4fv(glGetUniformLocation(Context::skyboxProgram, "view"), 1, false, glm::value_ptr(glm::mat4(glm::mat3(Context::camera.view))));
+
+	glBindVertexArray(Context::skyboxVAO);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, Context::skyboxProgram);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, Context::skyboxTexture);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+
+	glDepthMask(GL_TRUE);
+	//glDepthFunc(GL_LESS);
+
 	for (int i = 0; i < Context::instances.size(); ++i) {
 		Instance& inst = Context::instances[i];
 		Material* material = inst.material;
@@ -98,9 +190,6 @@ void display() {
 	glFlush();
 	glutSwapBuffers();
 }
-
-
-
 
 int main (int argc, char ** argv) {
 	if (argc < 2) {
@@ -122,8 +211,16 @@ int main (int argc, char ** argv) {
 	key('?', 0, 0);
 
 	std::string path(argv[1]);
+	Context::rendererType = RendererType::Reflective;
 	loadDataWithAssimp(path);
 	beforeLoop();
+
+	// default zoom
+
+	{
+		Context::materials[0]->m_texture = loadTexture2DFromFilePath("data/texture.jpg");
+		Context::materials[0]->m_textureBump = loadTexture2DFromFilePath("data/ground.jpg");
+	}
 
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);

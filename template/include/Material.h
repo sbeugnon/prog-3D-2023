@@ -8,6 +8,22 @@
 #include <string>
 #include <stdexcept>
 
+struct PBRParams
+{
+	glm::vec3 albedo;
+	float metalness;
+	float roughness;
+	float ao;
+};
+
+struct PhongParams
+{
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+	float shininess;
+};
+
 struct Material {
 	// Shader program
 	GLuint m_program;
@@ -15,6 +31,9 @@ struct Material {
 	// Material parameters
 	glm::vec4 m_color;
 	GLint m_texture;
+	GLint m_textureBump;
+	PBRParams m_pbr;
+	PhongParams m_phong;
 
 	inline void check() {
 		if (m_program == 0) {

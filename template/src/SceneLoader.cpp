@@ -75,7 +75,51 @@ Mesh* createMesh(aiMesh* mesh) {
 
 Material* createMaterial(aiMaterial* material) {
 	// TODO: implement recovery of your scene's material into your material schema
-	return new Material();
+
+	Material * mat = new Material();
+
+	if (Context::rendererType == RendererType::PBR)
+	{
+		for (int i=0; i<material->mNumProperties; ++i)
+		{
+			if (material->mProperties[i]->mKey == aiString("$clr.base"))
+			{
+				auto * albedo = (float*)material->mProperties[i]->mData;
+				mat->m_pbr.albedo = glm::make_vec3(albedo);
+			}
+			else if (material->mProperties[i]->mKey == aiString("$mat.metallicFactor"))
+			{
+				mat->m_pbr.metalness = *(float*)material->mProperties[i]->mData;
+			}
+			else if (material->mProperties[i]->mKey == aiString("$mat.roughnessFactor"))
+			{
+				mat->m_pbr.roughness = *(float*)material->mProperties[i]->mData;
+			}
+
+			/*std::cout << material->mProperties[i]->mKey.C_Str() << "(" << material->mProperties[i]->mType << ")" << std::endl;
+			if (material->mProperties[i]->mType == aiPTI_String)
+			{
+				std::cout << "\tvalue :" << ((aiString*)material->mProperties[i]->mData)->C_Str() << std::endl;
+			}
+			if (material->mProperties[i]->mType == aiPTI_Float)
+			{
+				std::cout << "\tvalue :" << *(float*)material->mProperties[i]->mData << std::endl;
+			}
+			else if (material->mProperties[i]->mType == aiPTI_Double)
+			{
+				std::cout << "\tvalue :" << *(double*)material->mProperties[i]->mData << std::endl;
+			}*/
+		}
+	}
+	else if (Context::rendererType == RendererType::Phong)
+	{
+		mat->m_phong.ambient = glm::vec3(0.0, 0.0, 0.0);
+		mat->m_phong.diffuse = glm::vec3(0.0, 1.0, 0.0);
+		mat->m_phong.specular = glm::vec3(0.0, 1.0, 0.0);
+		mat->m_phong.shininess = 16;
+	}
+
+	return mat;
 }
 
 void loadDataWithAssimp(const std::string& path) {

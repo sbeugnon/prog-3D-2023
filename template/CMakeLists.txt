@@ -8,15 +8,15 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 #find_package(OpenGL REQUIRED) # OpenGL
 find_package(GLUT REQUIRED)
 message("try to find GLM on System")
-find_package(glm QUIET)
+#find_package(glm QUIET)
 set(BUILD_SHARED_LIBS ON CACHE BOOL "build subdirectories with shared libs")
-if (glm_FOUND)
-	message("GLM system package found!")
-else()
+#if (glm_FOUND)
+#	message("GLM system package found!")
+#else()
 	message("GLM system package not found!")
 	add_subdirectory(thirdparties/glm)
 	set(glm_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparties/glm)
-endif()
+#endif()
 message("try to find Assimp on System")
 find_package(assimp QUIET)
 if (glm_FOUND)
@@ -46,3 +46,14 @@ include_directories(include/ /usr/include/ ${LIB_HEADERS} )
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 # Link libraries
 target_link_libraries(${PROJECT_NAME} ${LIBS})
+
+
+add_custom_command(
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/data" "${CMAKE_CURRENT_BINARY_DIR}/data"
+)
+
+add_custom_command(
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders"
+)

@@ -53,7 +53,7 @@ void motion(int x, int y) {
 		Context::refreshMatrices = true;
 	}
 	else if (Mouse::mouseZoomPressed == true) {
-		Context::camera.move(0, 0, (y - Mouse::lastZoom)/static_cast<float>(SCREENHEIGHT));
+		Context::camera.move(0, 0, 10*(y - Mouse::lastZoom)/static_cast<float>(SCREENHEIGHT));
 		// Context::camera.zoom (float (y-Mouse::lastZoom)/SCREENHEIGHT);
 		Mouse::lastZoom = y;
 		Context::refreshMatrices = true;
