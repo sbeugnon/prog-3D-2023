@@ -19,10 +19,24 @@ struct Instance {
   Material* material;
 };
 
+enum RendererType
+{
+	Unlit,
+	Phong,
+	Reflective,
+	PBR,
+};
+
 struct Context {
   static Camera camera;
   static bool fullScreen;
   static bool refreshMatrices;
+  static GLuint skyboxProgram;
+  static GLuint skyboxTexture;
+  static GLuint skyboxVAO;
+  static GLuint skyboxVBO;
+
+  static RendererType rendererType;
 
   static std::vector<Instance> instances;
   static std::vector<Mesh*> meshes;
