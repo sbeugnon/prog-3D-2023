@@ -3,9 +3,9 @@
 
 #include <string>
 #include <GL/glew.h>
-
+#include <vector>
 GLuint loadTexture2DFromFilePath(const std::string& path);
 
 void setDefaultTexture2DParameters(GLuint texture);
-
+unsigned int loadCubemap(std::vector<std::string> faces);
 #endif

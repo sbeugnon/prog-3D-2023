@@ -27,6 +27,7 @@ void Mesh::draw() {
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);// 3 because assimp 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementsBuffer);
 	glDrawElements(GL_TRIANGLES, 3 * mNumFaces, GL_UNSIGNED_INT, (void*)0);
+	glBindVertexArray(0);
 }
 
 void Mesh::clear() {

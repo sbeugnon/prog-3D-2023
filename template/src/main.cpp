@@ -25,6 +25,7 @@
 #include "Mouse.h"
 #include "Keyboard.h"
 #include "SceneLoader.h"
+#include "Texture.h"
 
 
 
@@ -34,16 +35,18 @@
 // -------------------------------------------
 
 static GLint window;
-
+GLuint skyboxTexture;
+Material skyboxM;
+GLuint cubemapBuf;
+GLuint VBO;
 void init() {
 	// Context::camera.initPos();
 	Context::camera.resize(SCREENWIDTH, SCREENHEIGHT);
-	glCullFace (GL_BACK);
-	glEnable (GL_CULL_FACE);
-	glDepthFunc (GL_LESS);
+	//glCullFace (GL_BACK);
+	//glEnable (GL_CULL_FACE);
 	glEnable (GL_DEPTH_TEST);
 	glClearColor (0.2f, 0.2f, 0.3f, 1.0f);
-
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	// Initialize GLEW
 	glewExperimental = true; // Needed for core profile
 	if (glewInit() != GLEW_OK) {
@@ -79,16 +82,37 @@ void draw() {
 		Context::refreshMatrices = false;
 	}
 	// Clear the screen
-	glClear(GL_COLOR_BUFFER_BIT);
-
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	for (int i = 0; i < Context::instances.size(); ++i) {
 		Instance& inst = Context::instances[i];
 		Material* material = inst.material;
+
 		Mesh* mesh = inst.mesh;
 		material->bind();
+		glBindBuffer(GL_TEXTURE_CUBE_MAP, skyboxTexture);
+		glUniform1i(material->getUniform("skybox"), 11);
+		GLint campos = material->getUniform("cameraPos");
+		glUniform3fv(campos, 1, glm::value_ptr(Context::camera.position));
 		material->setMatrices(Context::camera.projection, Context::camera.view, inst.matrix);
 		mesh->draw();
 	}
+	glDepthFunc(GL_LEQUAL);
+	skyboxM.bind();
+	glm::mat4 view = glm::mat4(glm::mat3(Context::camera.view)); 
+	glUniformMatrix4fv(skyboxM.getUniform("view"), 1, false, glm::value_ptr(view));
+	glUniformMatrix4fv(skyboxM.getUniform("projection"), 1, false, glm::value_ptr(Context::camera.projection));
+
+	glBindVertexArray(cubemapBuf);
+	glActiveTexture(GL_TEXTURE0+11);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexture);
+	glUniform1i(skyboxM.getUniform("skybox"), 11);
+	glBindBuffer(GL_ARRAY_BUFFER,VBO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDepthFunc(GL_LESS);
+
+
+
 }
 
 
@@ -98,8 +122,6 @@ void display() {
 	glFlush();
 	glutSwapBuffers();
 }
-
-
 
 
 int main (int argc, char ** argv) {
@@ -123,8 +145,78 @@ int main (int argc, char ** argv) {
 
 	std::string path(argv[1]);
 	loadDataWithAssimp(path);
-	beforeLoop();
 
+	
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f
+	};
+	
+	glGenVertexArrays(1, &cubemapBuf);
+	glGenBuffers(1,&VBO);
+	
+	glBindVertexArray(cubemapBuf);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	std::string folder = std::filesystem::current_path().c_str();
+	folder+='/';
+	//glEnableVertexAttribArray(0);
+	std::vector<std::string> skyboxfaces
+	{
+		"cubemap/skybox1.png",
+		"cubemap/skybox3.png",
+		"cubemap/skybox4.png",
+		"cubemap/skybox5.png",
+		"cubemap/skybox0.png",
+		"cubemap/skybox2.png"
+	};
+	skyboxTexture = loadCubemap(skyboxfaces);
+	skyboxM.m_type=1;
+	skyboxM.init();
+
+	beforeLoop();
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	glutMainLoop();

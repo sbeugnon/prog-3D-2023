@@ -4,5 +4,5 @@
 #include <string>
 
 void loadDataWithAssimp(const std::string& path);
-
+void importFirstObjasSkybox(const std::string& path);
 #endif
